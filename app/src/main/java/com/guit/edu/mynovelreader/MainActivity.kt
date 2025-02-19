@@ -13,11 +13,20 @@ import androidx.navigation.navArgument
 import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.runtime.*
+import androidx.core.view.WindowCompat
+import android.graphics.Color
+import androidx.core.view.WindowInsetsControllerCompat
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 设置状态栏和导航栏沉浸
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.TRANSPARENT
+
         setContent {
             val onBackPressedDispatcherOwner = LocalOnBackPressedDispatcherOwner.current
             val books = remember { mutableStateOf(listOf<Book>()) }
@@ -31,7 +40,12 @@ class MainActivity : ComponentActivity() {
                     arguments = listOf(navArgument("bookId") { type = NavType.IntType })
                 ) { backStackEntry ->
                     val bookId = backStackEntry.arguments?.getInt("bookId") ?: 0
-                    ReaderScreen(bookId = bookId, navController = navController, books = books, onBackPressedDispatcherOwner = onBackPressedDispatcherOwner!!)
+                    ReaderScreen(
+                        bookId = bookId,
+                        navController = navController,
+                        books = books,
+                        onBackPressedDispatcherOwner = onBackPressedDispatcherOwner!!
+                    )
                 }
             }
         }

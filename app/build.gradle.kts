@@ -1,16 +1,18 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("plugin.serialization") version "1.9.22"
+    id("kotlin-kapt")
 }
 
 android {
     namespace = "com.guit.edu.mynovelreader"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.guit.edu.mynovelreader"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -30,17 +32,20 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
+        freeCompilerArgs = freeCompilerArgs + listOf("-opt-in=kotlin.RequiresOptIn")
+        freeCompilerArgs = freeCompilerArgs + listOf("-Xcontext-receivers")
+        freeCompilerArgs = freeCompilerArgs + listOf("-Xstring-concat=indy-with-constants")
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
     packaging {
         resources {
@@ -73,5 +78,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     //数据持久化
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+
 }
